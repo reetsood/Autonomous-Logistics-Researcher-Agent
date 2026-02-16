@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomous Logistics Researcher</title>
+    <!-- Marked for Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Mermaid for Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #eef2f5; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* SIDEBAR */
+        .sidebar { width: 280px; background: #2c3e50; color: white; display: flex; flex-direction: column; padding: 20px; box-shadow: 2px 0 5px rgba(0,0,0,0.1); }
+        .sidebar h3 { margin-top: 0; border-bottom: 1px solid #34495e; padding-bottom: 15px; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+        .new-chat-btn { background: #1abc9c; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 15px; transition: 0.2s; }
+        .new-chat-btn:hover { background: #16a085; }
+        .history-list { flex: 1; overflow-y: auto; }
+        .history-item { background: #34495e; padding: 12px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .history-item:hover { background: #1abc9c; }
+        
+        /* MAIN CONTENT */
+        .main-content { flex: 1; display: flex; flex-direction: column; padding: 20px; max-width: 1000px; margin: 0 auto; width: 100%; }
+        .header { text-align: center; margin-bottom: 15px; color: #2c3e50; }
+
+        /* Chat Box */
+        #chat-box { flex: 1; background: white; border-radius: 12px; padding: 30px; overflow-y: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e0e0e0; display: flex; flex-direction: column; gap: 20px; }
+        
+        .message { padding: 15px; border-radius: 12px; line-height: 1.6; max-width: 95%; word-wrap: break-word; }
+        .user-msg { align-self: flex-end; background-color: #e3f2fd; color: #0d47a1; border-bottom-right-radius: 0; }
+        .bot-msg { align-self: flex-start; background-color: #f1f8e9; color: #333; border-bottom-left-radius: 0; border: 1px solid #eee; width: 100%; }
+        
+        .bot-msg h1, .bot-msg h2 { color: #2e7d32; margin-top: 5px; }
+        .bot-msg strong { color: #000; }
+        
+        /* Table Styling */
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; background: white; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #2e7d32; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+
+        /* Mermaid Graph Styling */
+        .mermaid { background: white; padding: 10px; border-radius: 8px; text-align: center; margin: 15px 0; }
+
+        /* Sources Dropdown */
+        details.sources-box { margin-top: 15px; border: 1px solid #c8e6c9; background-color: #e8f5e9; border-radius: 8px; overflow: hidden; }
+        details.sources-box summary { padding: 10px 15px; cursor: pointer; font-weight: bold; color: #2e7d32; background-color: #e8f5e9; list-style: none; display: flex; align-items: center; gap: 8px; }
+        details.sources-box summary:hover { background-color: #c8e6c9; }
+        details.sources-box summary::after { content: "▼"; font-size: 0.8em; margin-left: auto; transition: transform 0.2s; }
+        details.sources-box[open] summary::after { transform: rotate(180deg); }
+        .sources-content { padding: 15px; background-color: white; border-top: 1px solid #c8e6c9; font-size: 0.9em; }
+
+        .input-area { display: flex; gap: 10px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; outline: none; font-size: 16px; }
+        button { padding: 12px 25px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #1b5e20; }
+        .loading { text-align: center; color: #7f8c8d; font-style: italic; display: none; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h3>📂 History</h3>
+    <button class="new-chat-btn" onclick="startNewChat()">+ New Research</button>
+    <div class="history-list" id="history-list"></div>
+</div>
+
+<div class="main-content">
+    <div class="header"><h2>🤖 Logistics Research Agent</h2></div>
+    <div id="chat-box">
+        <div class="message bot-msg">Hello! I am ready. Enter a topic to start deep research with graphs and stats.</div>
+    </div>
+    <div class="loading" id="loader">Agent is analyzing stats and drawing graphs...</div>
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="Type a topic..." onkeypress="handleEnter(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    mermaid.initialize({ startOnLoad: false, theme: 'default' });
+    window.onload = loadHistory;
+
+    function handleEnter(e) { if (e.key === "Enter") sendMessage(); }
+
+    function renderMessageHTML(rawText) {
+        // 1. Split References
+        const splitRegex = /##\s*References/i;
+        const parts = rawText.split(splitRegex);
+
+        // 2. Convert Markdown to HTML
+        let htmlContent = marked.parse(parts[0]);
+
+        // 3. Handle Sources Dropdown
+        if (parts.length > 1 && parts[1].trim().length > 0) {
+            let referencesHtml = marked.parse(parts[1]);
+            htmlContent += `
+                <details class="sources-box">
+                    <summary>📚 View Sources / References</summary>
+                    <div class="sources-content">${referencesHtml}</div>
+                </details>
+            `;
+        }
+        return htmlContent;
+    }
+
+    // Function to find Mermaid code blocks and convert them
+    function processMermaidGraphs(container) {
+        // Find all <pre><code> blocks that marked.js created
+        let codeBlocks = container.querySelectorAll('pre code.language-mermaid');
+        
+        codeBlocks.forEach(block => {
+            let graphDefinition = block.textContent; // Get the raw mermaid code
+            let preElement = block.parentElement;    // The <pre> tag
+            
+            // Create a new div for Mermaid
+            let div = document.createElement('div');
+            div.className = 'mermaid';
+            div.textContent = graphDefinition;
+            
+            // Replace the <pre> with the new <div>
+            preElement.replaceWith(div);
+        });
+
+        // Tell Mermaid to render the new divs
+        mermaid.run();
+    }
+
+    async function startNewChat() {
+        await fetch('/new_chat');
+        document.getElementById("chat-box").innerHTML = `
+            <div class="message bot-msg">
+                <strong>New Chat Started.</strong><br>Enter a topic to begin a new research task.
+            </div>`;
+    }
+
+    async function loadHistory() {
+        try {
+            let res = await fetch('/history');
+            let files = await res.json();
+            let listDiv = document.getElementById("history-list");
+            listDiv.innerHTML = "";
+            files.forEach(file => {
+                let cleanName = file.replace(".md", "").substring(20); 
+                if(cleanName.length === 0) cleanName = file; 
+                listDiv.innerHTML += `<div class="history-item" onclick="loadReport('${file}')">📄 ${cleanName}</div>`;
+            });
+        } catch (e) { console.error(e); }
+    }
+
+    async function loadReport(filename) {
+        let chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML = "<div class='loading' style='display:block'>Loading report context...</div>";
+        try {
+            let res = await fetch(`/load_report/${filename}`);
+            let data = await res.json();
+            
+            // Render HTML
+            chatBox.innerHTML = `
+                <div class="message bot-msg" id="report-content">
+                    <strong>Loaded Report: ${filename}</strong><br><br>
+                    ${renderMessageHTML(data.content)}
+                </div>
+                <div class="message bot-msg"><em>Context loaded. You can now ask follow-up questions.</em></div>
+            `;
+            // Process Graphs
+            processMermaidGraphs(document.getElementById("report-content"));
+            
+        } catch (e) { chatBox.innerHTML = "Error loading file."; }
+    }
+
+    async function sendMessage() {
+        let inputField = document.getElementById("user-input");
+        let chatBox = document.getElementById("chat-box");
+        let loader = document.getElementById("loader");
+        let query = inputField.value;
+
+        if (query.trim() === "") return;
+
+        chatBox.innerHTML += `<div class="message user-msg">${query}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+        inputField.value = "";
+        loader.style.display = "block";
+
+        let formData = new FormData();
+        formData.append("query", query);
+
+        try {
+            let response = await fetch("/process_query", { method: "POST", body: formData });
+            let data = await response.json();
+            
+            loader.style.display = "none";
+            
+            // Create a temporary container to hold the new message
+            let msgDiv = document.createElement('div');
+            msgDiv.className = 'message bot-msg';
+            msgDiv.innerHTML = renderMessageHTML(data.response);
+            
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            // Find and Render charts inside this new message
+            processMermaidGraphs(msgDiv);
+            
+            if (data.mode === 'research') loadHistory();
+            
+        } catch (error) {
+            console.error("Error:", error);
+            loader.style.display = "none";
+            chatBox.innerHTML += `<div class="message bot-msg" style="color:red">Error processing request.</div>`;
+        }
+    }
+</script>
+
+</body>
+</html>

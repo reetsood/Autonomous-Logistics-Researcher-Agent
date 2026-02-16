@@ -1,0 +1,6 @@
+flask
+crewai
+langchain-ollama
+langchain-community
+duckduckgo-search
+python-dotenv
