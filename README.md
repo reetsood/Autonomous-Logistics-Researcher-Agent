@@ -17,6 +17,7 @@ HTML (Jinja Templates)
 AI Agent Logic
 
 # 📂 Project Structure
+'''
 LogisticsResearcher/
 │
 ├── app.py                # Main Flask application
@@ -24,6 +25,7 @@ LogisticsResearcher/
 ├── requirements.txt      # Required Python packages
 ├── templates/            # HTML files
 └── readme.txt            # Basic documentation
+'''
 
 # 🚀 How to Run the Project
 
