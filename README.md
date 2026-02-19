@@ -8,16 +8,16 @@ This project demonstrates how an AI agent can be integrated into a web applicati
 
 # 🛠️ Technologies Used
 
-Python
+- Python
 
-Flask
+- Flask
 
-HTML (Jinja Templates)
+- HTML (Jinja Templates)
 
-AI Agent Logic
+- AI Agent Logic
 
 # 📂 Project Structure
-'''
+```
 LogisticsResearcher/
 │
 ├── app.py                # Main Flask application
@@ -25,63 +25,63 @@ LogisticsResearcher/
 ├── requirements.txt      # Required Python packages
 ├── templates/            # HTML files
 └── readme.txt            # Basic documentation
-'''
+```
 
 # 🚀 How to Run the Project
 
 Clone the repository:
-
+```
 git clone https://github.com/your-username/LogisticsResearcher.git
 cd LogisticsResearcher
-
+```
 
 Create a virtual environment (optional but recommended):
-
+```
 python -m venv venv
 venv\Scripts\activate        (For Windows)
 source venv/bin/activate     (For Mac/Linux)
-
+```
 
 Install dependencies:
-
+```
 pip install -r requirements.txt
-
+```
 
 Run the application:
-
+```
 python app.py
-
+```
 
 Open in browser:
-
+```
 http://127.0.0.1:5000/
-
+```
 # 🧠 How It Works
 
-The user submits a logistics-related query.
+- The user submits a logistics-related query.
 
-The Flask backend receives the request.
+- The Flask backend receives the request.
 
-The query is processed using agent-based reasoning in agent_logic.py.
+- The query is processed using agent-based reasoning in agent_logic.py.
 
-A structured response is generated and displayed on the web interface.
+- A structured response is generated and displayed on the web interface.
 
 # 🎯 Use Cases
 
-Logistics and supply chain research
+- Logistics and supply chain research
 
-AI agent demonstration project
+- AI agent demonstration project
 
-Academic submission project
+- Academic submission project
 
-Backend + AI integration example
+- Backend + AI integration example
 
 # 🔮 Future Enhancements
 
-Add database integration
+- Add database integration
 
-Improve UI/UX design
+- Improve UI/UX design
 
-Deploy on cloud platform
+- Deploy on cloud platform
 
-Add multi-agent functionality
+- Add multi-agent functionality
