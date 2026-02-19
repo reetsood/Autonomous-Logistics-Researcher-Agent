@@ -1,12 +1,12 @@
-🚚  AutonomousLogistics Researcher Agent
+# 🚚  AutonomousLogistics Researcher Agent
 
 Logistics Researcher Agent is an AI-powered web application built using Flask that acts as an intelligent research assistant for logistics and supply chain related queries. The system processes user input, applies agent-based reasoning logic, and generates structured responses.
 
-📌 Project Overview
+# 📌 Project Overview
 
 This project demonstrates how an AI agent can be integrated into a web application to handle domain-specific research queries. It combines backend reasoning logic with a simple web interface to create an interactive research assistant.
 
-🛠️ Technologies Used
+# 🛠️ Technologies Used
 
 Python
 
@@ -16,7 +16,7 @@ HTML (Jinja Templates)
 
 AI Agent Logic
 
-📂 Project Structure
+# 📂 Project Structure
 LogisticsResearcher/
 │
 ├── app.py                # Main Flask application
@@ -25,7 +25,7 @@ LogisticsResearcher/
 ├── templates/            # HTML files
 └── readme.txt            # Basic documentation
 
-🚀 How to Run the Project
+# 🚀 How to Run the Project
 
 Clone the repository:
 
@@ -54,7 +54,7 @@ Open in browser:
 
 http://127.0.0.1:5000/
 
-🧠 How It Works
+# 🧠 How It Works
 
 The user submits a logistics-related query.
 
@@ -64,7 +64,7 @@ The query is processed using agent-based reasoning in agent_logic.py.
 
 A structured response is generated and displayed on the web interface.
 
-🎯 Use Cases
+# 🎯 Use Cases
 
 Logistics and supply chain research
 
@@ -74,7 +74,7 @@ Academic submission project
 
 Backend + AI integration example
 
-🔮 Future Enhancements
+# 🔮 Future Enhancements
 
 Add database integration
 
