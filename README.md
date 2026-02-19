@@ -30,30 +30,30 @@ LogisticsResearcher/
 # 🚀 How to Run the Project
 
 Clone the repository:
-```
+```bash
 git clone https://github.com/your-username/LogisticsResearcher.git
 cd LogisticsResearcher
 ```
 
 Create a virtual environment (optional but recommended):
-```
+```bash
 python -m venv venv
 venv\Scripts\activate        (For Windows)
 source venv/bin/activate     (For Mac/Linux)
 ```
 
 Install dependencies:
-```
+```bash
 pip install -r requirements.txt
 ```
 
 Run the application:
-```
+```bash
 python app.py
 ```
 
 Open in browser:
-```
+```bash
 http://127.0.0.1:5000/
 ```
 # 🧠 How It Works
